@@ -9,7 +9,7 @@
   };
   const STICK = { KeyW:[0,-1], KeyS:[0,1], KeyA:[-1,0], KeyD:[1,0] };  // 左搖桿
   const RSTICK = { KeyI:[0,-1], KeyK:[0,1], KeyJ:[-1,0], KeyL:[1,0] }; // 右搖桿(無滑鼠時)
-  const st = { on: true, btn: new Array(17).fill(0), down: new Set(), mx: 0, my: 0, lt: 0, rt: 0, connected: false };
+  const st = { on: true, look: false, btn: new Array(17).fill(0), down: new Set(), mx: 0, my: 0, lt: 0, rt: 0, connected: false };
   const SENS = 0.045;
 
   const mk = (v) => ({ pressed: v > 0.5, touched: v > 0, value: v });
@@ -56,7 +56,8 @@
   }, true);
   addEventListener('keyup', (e) => { if (st.down.delete(e.code)) e.preventDefault(); }, true);
   addEventListener('blur', () => st.down.clear());
-  addEventListener('mousedown', (e) => { if (!st.on) return; if (e.button === 0) st.rt = 1; if (e.button === 2) st.lt = 1; }, true);
+  addEventListener('mousedown', (e) => { if (!st.on) return;
+    if (st.look && !document.pointerLockElement) { try { document.documentElement.requestPointerLock(); } catch (_) {} } if (e.button === 0) st.rt = 1; if (e.button === 2) st.lt = 1; }, true);
   addEventListener('mouseup', (e) => { if (e.button === 0) st.rt = 0; if (e.button === 2) st.lt = 0; }, true);
   addEventListener('mousemove', (e) => {
     if (!st.on || !document.pointerLockElement) return;   // 只在滑鼠鎖定時當作右搖桿
